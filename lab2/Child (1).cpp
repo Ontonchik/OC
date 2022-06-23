@@ -1,7 +1,6 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
-using namespace std;
 
 int main(int arg, char* argv[]) {
 	int size = atoi(argv[1]);
@@ -27,23 +26,23 @@ int main(int arg, char* argv[]) {
 		}
 	}
 	for (int i = 0; i < tmp; i += 2) {
-		cout << temp[i] << " ";
+		std::cout << temp[i] << " ";
 	}
 	int medium;
 	for (int i = 0; i < size; i++) {
 		if (flags[i] == 1) {
 			medium = mas[i];
-			cout << mas[i] << " ";
+			std::cout << mas[i] << " ";
 			break;
 		}
 	}
 	for (int i = tmp - 1; i >= 0; i -= 2) {
-		cout << temp[i] << " ";
+		std::cout << temp[i] << " ";
 	}
 	for (int j = 0; j < size; j++) {
 		if (flags[j] == 1 && mas[j] != medium) {
-			cout << mas[j] << " ";
+			std::cout << mas[j] << " ";
 		}
 	}
-	return 0;
+	std::cin.get();
 }
