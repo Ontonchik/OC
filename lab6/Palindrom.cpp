@@ -1,7 +1,7 @@
 #include <windows.h>
 #include <conio.h>
 #include <iostream>
-using namespace std;
+
 int main(int argc, char* argv[])
 {
 	setlocale(LC_ALL, "rus");
@@ -9,29 +9,30 @@ int main(int argc, char* argv[])
 	char machineName[80];
 	TCHAR pipeName[80];
 	DWORD dwBytesWritten;
-	cout << "Enter a name of the server machine: ";
-	cin >> machineName;
+	std::cout << "Enter a name of the server machine: ";
+	std::cin >> machineName;
 	wsprintf(pipeName, L" ", machineName);
 
 
 	hNamedPipe = CreateFile(L"\\\\.\\pipe\\demo_pipe", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, (LPSECURITY_ATTRIBUTES)NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, (HANDLE)NULL);
 	if (hNamedPipe == INVALID_HANDLE_VALUE)
 	{
-		cerr << "Connection with the named pipe failed." << endl
-			<< "The last error code: " << GetLastError() << endl;
+		std::cerr << "Connection with the named pipe failed." << std::endl
+			<< "The last error code: " << GetLastError() << std::endl;
 		cout << "Press any char to finish the client: ";
 		_getch();
 		return 0;
 	}
-	cout << "Â îæèäàíèå ïîëó÷åíèÿ ðàçìåðíîñòè ìàññèâà" << endl;
+	cout << "Ð’ Ð¾Ð¶Ð¸Ð´Ð°Ð½Ð¸Ðµ Ð¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ð¸Ñ Ñ€Ð°Ð·Ð¼ÐµÑ€Ð½Ð¾ÑÑ‚Ð¸ Ð¼Ð°ÑÑÐ¸Ð²Ð°" << std::endl;
 	int n;
 	DWORD dwBytesRead;
+
 	if (!ReadFile(hNamedPipe, &n, sizeof(n), &dwBytesRead, (LPOVERLAPPED)NULL))
 	{
-		cerr << "Data reading from the named pipe failed." << endl
-			<< "The last error code: " << GetLastError() << endl;
+		std::cerr << "Data reading from the named pipe failed." << std::endl
+			<< "The last error code: " << GetLastError() << std::endl;
 		CloseHandle(hNamedPipe);
-		cout << "Press any char to finish the server: ";
+		std::cout << "Press any char to finish the server: ";
 		_getch();
 		return 0;
 	}
@@ -41,8 +42,8 @@ int main(int argc, char* argv[])
 	{
 		if (!ReadFile(hNamedPipe, &s[i], sizeof(s), &dwBytesRead2, (LPOVERLAPPED)NULL))
 		{
-			cerr << "Data reading from the named pipe failed." << endl
-				<< "The last error code: " << GetLastError() << endl;
+			std::cerr << "Data reading from the named pipe failed." << std::endl
+				<< "The last error code: " << GetLastError() << std::endl;
 			CloseHandle(hNamedPipe);
 			cout << "Press any char to finish the server: ";
 			_getch();
@@ -51,18 +52,17 @@ int main(int argc, char* argv[])
 	}
 
 	system("cls");
-	cout << "Polindrom ïîëó÷èë ðàçìåð ìàññèâà: " << n << endl;
+	std::cout << "Polindrom Ð¿Ð¾Ð»ÑƒÑ‡Ð¸Ð» Ñ€Ð°Ð·Ð¼ÐµÑ€ Ð¼Ð°ÑÑÐ¸Ð²Ð°: " << n << std::endl;
 
 	char x;
-	cout << "Ââåäèòå ðàçäåëèòåëü" << endl;
-	cin >> x;
-	cout << "Ïîëó÷åííûé ðàçäåëèòåëü " << x << endl;
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ð¸Ñ‚ÐµÐ»ÑŒ" << std::endl;
+	std::cin >> x;
+	std::cout << "ÐŸÐ¾Ð»ÑƒÑ‡ÐµÐ½Ð½Ñ‹Ð¹ Ñ€Ð°Ð·Ð´ÐµÐ»Ð¸Ñ‚ÐµÐ»ÑŒ " << x << std::endl;
 
 	int k = 0;
 	bool key = true;
 	for (int i = 0; i < n; i++)
 	{
-		//cout << s[i] << " ";
 		if (s[i] == x)
 		{
 			for (int j = 0; j < (i - k) / 2; j++)
@@ -73,35 +73,34 @@ int main(int argc, char* argv[])
 					break;
 				}
 			}
-			//cout << key;
+
 			if (key)
 			{
 				for (int j = k; j < i; j++)
 				{
-					cout << s[j];
+					std::cout << s[j];
 					DWORD dwBytesWritten;
 					if (!WriteFile(hNamedPipe, &s[j], sizeof(s), &dwBytesWritten, (LPOVERLAPPED)NULL))
 					{
-						cerr << "Writing to the named pipe failed: " << endl
-							<< "The last error code: " << GetLastError() << endl;
-						cout << "Press any char to finish the client: ";
+						std::cerr << "Writing to the named pipe failed: " << std::endl
+							<< "The last error code: " << GetLastError() << std::endl;
+						std::cout << "Press any char to finish the client: ";
 						_getch();
 						CloseHandle(hNamedPipe);
 						return 0;
 					}
 				}
+
 				DWORD dwBytesWritten;
 				if (!WriteFile(hNamedPipe, &s[i], sizeof(s), &dwBytesWritten, (LPOVERLAPPED)NULL))
 				{
-					cerr << "Writing to the named pipe failed: " << endl
-						<< "The last error code: " << GetLastError() << endl;
-					cout << "Press any char to finish the client: ";
+					std::cerr << "Writing to the named pipe failed: " << std::endl
+						<< "The last error code: " << GetLastError() << std::endl;
+					std::cout << "Press any char to finish the client: ";
 					_getch();
 					CloseHandle(hNamedPipe);
 					return 0;
 				}
-
-
 			}
 			k = i + 1;
 			key = true;
@@ -109,8 +108,8 @@ int main(int argc, char* argv[])
 
 	}
 	CloseHandle(hNamedPipe);
-	cout << "\nÂñå íàéäåííûå ïîëèíäðîìû áûëè îòïðàâëåíû\n";
-	cout << "Press any key to exit.\n";
+	std::cout << "\nÐ’ÑÐµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð½Ñ‹Ðµ Ð¿Ð¾Ð»Ð¸Ð½Ð´Ñ€Ð¾Ð¼Ñ‹ Ð±Ñ‹Ð»Ð¸ Ð¾Ñ‚Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ñ‹\n";
+	std::cout << "Press any key to exit.\n";
 	_getch();
 	return 0;
 }
