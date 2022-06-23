@@ -4,10 +4,6 @@
 #include <process.h>
 #include <string>
 #include <sstream>
-using namespace std;
-
-#define _CRT_SECURE_NO_WARNINGS
-#pragma
 
 HANDLE work, SumElement;
 DWORD IDwork, IDs;
@@ -25,8 +21,8 @@ DWORD WINAPI Work(LPVOID)
 {
 	EnterCriticalSection(&cs); 
 	int time;
-	cout << "Ââåäèòå âðåìÿ ïàóçû";
-	cin >> time;
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð²Ñ€ÐµÐ¼Ñ Ð¿Ð°ÑƒÐ·Ñ‹";
+	std::cin >> time;
 	num = 0;
 	temp=new char[length];
 	for (int i = 0; i<length; i++) {
@@ -60,29 +56,29 @@ DWORD WINAPI Sum(LPVOID) {
 int main()
 {
 	setlocale(LC_ALL, "RUS");
-	// èíèöèàëèçèðóåì êðèòè÷åñêóþ ñåêöèþ
+	// Ð¸Ð½Ð¸Ñ†Ð¸Ð°Ð»Ð¸Ð·Ð¸Ñ€ÑƒÐµÐ¼ ÐºÑ€Ð¸Ñ‚Ð¸Ñ‡ÐµÑÐºÑƒÑŽ ÑÐµÐºÑ†Ð¸ÑŽ
 	InitializeCriticalSection(&cs);
 	InitializeCriticalSection(&cs2);
 	work = CreateThread(NULL, 0, Work, NULL, CREATE_SUSPENDED, &IDwork);
 	if (work == NULL) return GetLastError();
 	SumElement = CreateThread(NULL, 0, Sum, NULL, CREATE_SUSPENDED, &IDs);
 	if (SumElement == NULL) return GetLastError();
-	cout << "Ââåäèòå ðàçìåð ìàññèâà";
-	cin >> length;
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ€Ð°Ð·Ð¼ÐµÑ€ Ð¼Ð°ÑÑÐ¸Ð²Ð°";
+	std::cin >> length;
 	arr = new int[length];
-	cout << "Ââåäèòå ýëåìåíòû ìàññèâà";
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ñ‹ Ð¼Ð°ÑÑÐ¸Ð²Ð°";
 	for (int i = 0; i < length; i++) {
-		cin >> arr[i];
+		std::cin >> arr[i];
 	}
 	EnterCriticalSection(&cs2);
-	cout << "Ââåäèòå ÷èñëî k";
-	cin >> k;
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ‡Ð¸ÑÐ»Ð¾ k";
+	std::cin >> k;
 	ResumeThread(work);
 	ResumeThread(SumElement);
 	Sleep(10);
 	EnterCriticalSection(&cs);
 	for (int i = 0; i < length; i++) {
-		cout << temp[i] << " ";
+		std::cout << temp[i] << " ";
 	}
 	hOutEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	if (hOutEvent == NULL)
@@ -90,7 +86,7 @@ int main()
 	LeaveCriticalSection(&cs);
 	LeaveCriticalSection(&cs2);
 	WaitForSingleObject(hOutEvent, INFINITE);
-	cout << endl << "Ñðåäíåå àðèôìåòè÷åñêîå ïåðâûõ " << k << " ýëåìåíòîâ:\n";
-	cout << mean;
+	std::cout << std::endl << "Ð¡Ñ€ÐµÐ´Ð½ÐµÐµ Ð°Ñ€Ð¸Ñ„Ð¼ÐµÑ‚Ð¸Ñ‡ÐµÑÐºÐ¾Ðµ Ð¿ÐµÑ€Ð²Ñ‹Ñ… " << k << " ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð²:\n";
+	std::cout << mean;
 	return 0;
 }
