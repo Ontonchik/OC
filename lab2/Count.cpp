@@ -1,17 +1,16 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
-using namespace std;
 
 void fibonachi(long long a, long long b) {
 	Sleep(100);
-	cout << a<<"\n";
+	std::cout << a <<"\n";
 	fibonachi(a + b, a);
 }
 
 int main() {
-	long long b = 0ll;
-	long long a = 1ll;
-	fibonachi(a,b);
-	cin.get();
+	const long long zero = 0ll;
+	const long long one = 1ll;
+	fibonachi(zero,one);
+	std::cin.get();
 }
