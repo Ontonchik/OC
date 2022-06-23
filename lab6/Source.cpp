@@ -1,7 +1,7 @@
 #include <windows.h>
 #include <conio.h>
 #include <iostream>
-using namespace std;
+
 int main(int argc, char* argv[])
 {
 	setlocale(LC_ALL, "rus");
@@ -16,79 +16,86 @@ int main(int argc, char* argv[])
 	SetSecurityDescriptorDacl(&sd, TRUE, NULL, FALSE);
 	sa.lpSecurityDescriptor = &sd;
 	hNamedPipe = CreateNamedPipe(L"\\\\.\\pipe\\demo_pipe", PIPE_ACCESS_DUPLEX, PIPE_TYPE_MESSAGE | PIPE_WAIT, 1, 0, 0, INFINITE, &sa);
+	
 	if (hNamedPipe == INVALID_HANDLE_VALUE)
 	{
-		cerr << "Creation of the named pipe failed." << endl
-			<< "The last error code: " << GetLastError() << endl;
-		cout << "Press any char to finish server: ";
+		std::cerr << "Creation of the named pipe failed." << std::endl
+			<< "The last error code: " << GetLastError() << std::endl;
+		std::cout << "Press any char to finish server: ";
 		_getch();
 		return 0;
 	}
-	cout << "The server is waiting for connection with a client." << endl;
+	std::cout << "The server is waiting for connection with a client." << std::endl;
+
 	if (!ConnectNamedPipe(hNamedPipe, (LPOVERLAPPED)NULL))
 	{
-		cerr << "The connection failed." << endl
-			<< "The last error code: " << GetLastError() << endl;
+		std::cerr << "The connection failed." << std::endl
+			<< "The last error code: " << GetLastError() << std::endl;
 		CloseHandle(hNamedPipe);
-		cout << "Press any char to finish the server: ";
+		std::cout << "Press any char to finish the server: ";
 		_getch();
 		return 0;
 	}
 	int n;
-	cout << "Ââåäèòå ðàçìåð ìàññèâà" << endl;
-	cin >> n;
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ€Ð°Ð·Ð¼ÐµÑ€ Ð¼Ð°ÑÑÐ¸Ð²Ð°" << std::endl;
+	std::cin >> n;
 	char* s = new char[n];
-	cout << "Ââåäèòå ìàññèâ" << endl;
-	cin >> s;
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¼Ð°ÑÑÐ¸Ð²" << std::endl;
+	std::cin >> s;
 	DWORD dwBytesWritten;
+
 	if (!WriteFile(hNamedPipe, &n, sizeof(n), &dwBytesWritten, (LPOVERLAPPED)NULL))
 	{
-		cerr << "Data writing to the named pipe failed." << endl
-			<< "The last error code: " << GetLastError() << endl;
+		std::cerr << "Data writing to the named pipe failed." << std::endl
+			<< "The last error code: " << GetLastError() << std::endl;
 		CloseHandle(hNamedPipe);
-		cout << "Press any char to finish the server: ";
+		std::cout << "Press any char to finish the server: ";
 		_getch();
 		return 0;
 	}
+
 	for (int i = 0; i < n; i++)
 	{
 		if (!WriteFile(hNamedPipe, &s[i], sizeof(s), &dwBytesWritten, (LPOVERLAPPED)NULL))
 		{
-			cerr << "Data writing to the named pipe failed." << endl
-				<< "The last error code: " << GetLastError() << endl;
+			std::cerr << "Data writing to the named pipe failed." << std::endl
+				<< "The last error code: " << GetLastError() << std::endl;
 			CloseHandle(hNamedPipe);
-			cout << "Press any char to finish the server: ";
+			std::cout << "Press any char to finish the server: ";
 			_getch();
 			return 0;
 		}
 	}
 
 	int i = 0;
-	cout << "Server îòïðàâèë : " << n << " " << s << endl;
+	std::cout << "Server Ð¾Ñ‚Ð¿Ñ€Ð°Ð²Ð¸Ð» : " << n << " " << s << std::endl;
 	int k = 0;
 	char* nData = new char[n];
+
 	while (true) {
 		k++;
 		DWORD dwBytesRead;
 		if (!ReadFile(hNamedPipe, &nData[i], sizeof(nData), &dwBytesRead, (LPOVERLAPPED)NULL))
 		{
 			CloseHandle(hNamedPipe);
-			cout << "\nÂñå ëåêñåìû áûëè ïîëó÷åíû" << endl;
+			std::cout << "\nÐ’ÑÐµ Ð»ÐµÐºÑÐµÐ¼Ñ‹ Ð±Ñ‹Ð»Ð¸ Ð¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ñ‹" << std::endl;
 			_getch();
 			return 0;
 		}
-		cout << "" << nData[i];
+		std::cout << "" << nData[i];
 		i++;
 	}
-	cout << endl;
+	std::cout << std::endl;
+
 	if (k == 0) {
-		cout << "Íè÷åãî íå áûëî ïîëó÷åíî" << endl;
+		std::cout << "ÐÐ¸Ñ‡ÐµÐ³Ð¾ Ð½Ðµ Ð±Ñ‹Ð»Ð¾ Ð¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ð¾" << std::endl;
 	}
 	else {
-		cout << "Âñå ëåêñåìû áûëè ïîëó÷åíû" << endl;
+		std::cout << "Ð’ÑÐµ Ð»ÐµÐºÑÐµÐ¼Ñ‹ Ð±Ñ‹Ð»Ð¸ Ð¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ñ‹" << std::endl;
 	}
+
 	CloseHandle(hNamedPipe);
-	cout << "Press any key to exit.\n";
+	std::cout << "Press any key to exit.\n";
 	_getch();
 	return 0;
 }
