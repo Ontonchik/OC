@@ -1,6 +1,5 @@
 #include <windows.h>
 #include <iostream>
-using namespace std;
 
 void setSTP(STARTUPINFO* stp) {
 	ZeroMemory(stp, sizeof(STARTUPINFO));
@@ -16,47 +15,47 @@ void setSTP(STARTUPINFO* stp) {
 
 int main() {
 	int n;
-	cin >> n;
-	string st("Child.exe");
-	for (int i = 0;i < n;++i) {
+	std::cin >> n;
+	std::string st("Child.exe");
+	for (int i = 0; i < n; ++i) {
 		char c;
-		cin >> c;
-		st.append(' ' + string(1, c));
+		std::cin >> c;
+		st.append(' ' + std::string(1, c));
 	}
-	wstring q(st.length(), L' ');
-	for (int i = 0;i < st.length();++i)
+	std::wstring q(st.length(), L' ');
+	for (int i = 0; i < st.length(); ++i)
 		q[i] = wchar_t(st[i]);
 
 	STARTUPINFO stp;
 	PROCESS_INFORMATION pi;
 	setSTP(&stp);
-	
-	CreateProcess(NULL, &q[0], NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &stp, &pi);//Запуск Child.exe
 
-	WaitForSingleObject(pi.hProcess,INFINITE);
+	CreateProcess(NULL, &q[0], NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &stp, &pi);//Г‡Г ГЇГіГ±ГЄ Child.exe
+
+	WaitForSingleObject(pi.hProcess, INFINITE);
 
 	CloseHandle(pi.hThread);
 	CloseHandle(pi.hProcess);
 
 
-	//////////Доп задача///////////
+	//////////Г„Г®ГЇ Г§Г Г¤Г Г·Г ///////////
 
-	
-	cout << "Setting priority:\n" << GetPriorityClass(GetCurrentProcess()) << " -> ";
-	SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS); //Установка приоритета
-	cout << GetPriorityClass(GetCurrentProcess()) << '\n';
+
+	std::cout << "Setting priority:\n" << GetPriorityClass(GetCurrentProcess()) << " -> ";
+	SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS); //Г“Г±ГІГ Г­Г®ГўГЄГ  ГЇГ°ГЁГ®Г°ГЁГІГҐГІГ 
+	std::cout << GetPriorityClass(GetCurrentProcess()) << '\n';
 
 	Sleep(1000);
 	ZeroMemory(&stp, sizeof(STARTUPINFO));
 	stp.cb = sizeof(STARTUPINFO);
-	CreateProcess(L"Count.exe", NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &stp, &pi);//Запуск Count.exe
+	CreateProcess(L"Count.exe", NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &stp, &pi);//Г‡Г ГЇГіГ±ГЄ Count.exe
 
 	Sleep(6000);
-	TerminateProcess(pi.hProcess, 0);//Прерывание работы процесса Count
+	TerminateProcess(pi.hProcess, 0);//ГЏГ°ГҐГ°Г»ГўГ Г­ГЁГҐ Г°Г ГЎГ®ГІГ» ГЇГ°Г®Г¶ГҐГ±Г±Г  Count
 
 	CloseHandle(pi.hThread);
 	CloseHandle(pi.hProcess);
 
 
-	ExitProcess(0); //завершение работы процесса Parent
+	ExitProcess(0); //Г§Г ГўГҐГ°ГёГҐГ­ГЁГҐ Г°Г ГЎГ®ГІГ» ГЇГ°Г®Г¶ГҐГ±Г±Г  Parent
 }
